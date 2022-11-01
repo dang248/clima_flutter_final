@@ -1,8 +1,12 @@
+import 'dart:convert';
 
 import 'package:clima/services/location.dart';
+import 'package:clima/services/networking.dart';
 import 'package:flutter/material.dart';
 import 'location_screen.dart';
 import 'package:http/http.dart' as http;
+
+const apiKey = '3113844d0ce9ec2865d7206226db87c3';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -12,35 +16,38 @@ class LoadingScreen extends StatefulWidget {
 class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
-     getLocation();
+    getLocationData();
+    print('Helllooooo');
     super.initState();
   }
 
-  void getLocation()  async {
+  void getLocationData() async {
     Location location = Location();
     await location.getCurrentLocation();
-    print(location.latitude);
-    print(location.longtitude);
-  }
+    double latitudeLocation = location.latitude;
+    double longtitudeLocation = location.longtitude;
 
-  void getData() async{
-    http.Response response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/albums/1'));
-    print(response.body);
+    NetworkHelper networkHelper = NetworkHelper(
+        'https://api.openweathermap.org/data/2.5/weather?lat=$latitudeLocation&lon=$longtitudeLocation&appid=$apiKey');
+    var temperature = await networkHelper.getData();
+    print(temperature['coord']['lat']);
+    // Navigator.push(context, MaterialPageRoute(builder: (context) {
+    //   return LocationScreen();
+    // }));
   }
 
   @override
   Widget build(BuildContext context) {
-    getData();
     return Scaffold(
-      // body: Center(
-      //   child: ElevatedButton(
-      //     onPressed: () {
-      //       getLocation();
-      //       print('Hello');
-      //     },
-      //     child: Text('Get Location'),
-      //   ),
-      // ),
-    );
+        // body: Center(
+        //   child: ElevatedButton(
+        //     onPressed: () {
+        //       getLocation();
+        //       print('Hello');
+        //     },
+        //     child: Text('Get Location'),
+        //   ),
+        // ),
+        );
   }
 }

@@ -8,6 +8,11 @@ class LocationScreen extends StatefulWidget {
 
 class _LocationScreenState extends State<LocationScreen> {
   @override
+  void initState() {
+    print('H');
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
